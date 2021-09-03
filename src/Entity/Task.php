@@ -16,29 +16,29 @@ class Task
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private \Datetime $createdAt;
 
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Vous devez saisir un titre.")
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Vous devez saisir du contenu.")
      */
-    private $content;
+    private string $content;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDone;
+    private bool $isDone;
 
     public function __construct()
     {
@@ -46,12 +46,12 @@ class Task
         $this->isDone = false;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): \Datetime
     {
         return $this->createdAt;
     }
@@ -61,7 +61,7 @@ class Task
         $this->createdAt = $createdAt;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -71,7 +71,7 @@ class Task
         $this->title = $title;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -81,7 +81,7 @@ class Task
         $this->content = $content;
     }
 
-    public function isDone()
+    public function isDone(): bool
     {
         return $this->isDone;
     }
