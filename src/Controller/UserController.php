@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,21 +15,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
-    /**
-     * @var UserPasswordHasherInterface
-     */
-    private $passwordHasher;
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher, UserRepository $userRepository, EntityManagerInterface $entityManager)
-    {
+    private UserPasswordHasherInterface $passwordHasher;
+    private UserRepository $userRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
@@ -46,7 +42,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/create", name="user_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): RedirectResponse|Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -72,7 +68,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function editAction(Request $request, User $user)
+    public function editAction(Request $request, User $user): RedirectResponse|Response
     {
         $form = $this->createForm(UserType::class, $user);
 

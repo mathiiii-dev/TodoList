@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController
 {
-    private $taskRepository;
-    private $entityManager;
+    private TaskRepository $taskRepository;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
     {
@@ -37,7 +37,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): RedirectResponse|Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -63,7 +63,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request)
+    public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(TaskType::class, $task);
 
