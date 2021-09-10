@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
+use App\Handler\TaskHandler;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,11 +18,13 @@ class TaskController extends AbstractController
 {
     private TaskRepository $taskRepository;
     private EntityManagerInterface $entityManager;
+    private TaskHandler $handler;
 
-    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager)
+    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager, TaskHandler $handler)
     {
         $this->taskRepository = $taskRepository;
         $this->entityManager = $entityManager;
+        $this->handler = $handler;
     }
 
     /**
@@ -45,12 +48,10 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             /** @var $user User */
             $user = $this->getUser();
-            $task->setUser($user);
-            $task->setIsDone(false);
-            $this->entityManager->persist($task);
-            $this->entityManager->flush();
+            $this->handler->handleCreate($user, $task);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -61,7 +62,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Route("/tasks/{id}/edit", name="task_edit", requirements={"id"="\d+"})
      */
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
@@ -84,12 +85,11 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @Route("/tasks/{id}/toggle", name="task_toggle", requirements={"id"="\d+"})
      */
     public function toggleTaskAction(Task $task): RedirectResponse
     {
-        $task->setIsDone(!$task->getIsDone());
-        $this->entityManager->flush();
+        $this->handler->handleIsDone($task);
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -97,12 +97,11 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Route("/tasks/{id}/delete", name="task_delete", requirements={"id"="\d+"})
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
+        $this->handler->handleDelete($task);
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 

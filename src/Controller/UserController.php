@@ -4,31 +4,25 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Handler\UserHandler;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
-
-    private UserPasswordHasherInterface $passwordHasher;
     private UserRepository $userRepository;
-    private EntityManagerInterface $entityManager;
+    private UserHandler $handler;
 
-    public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->passwordHasher = $passwordHasher;
+    public function __construct(UserRepository $userRepository, UserHandler $handler)
+    {
         $this->userRepository = $userRepository;
-        $this->entityManager = $entityManager;
+        $this->handler = $handler;
     }
+
     /**
      * @Route("/users", name="user_list")
      */
@@ -50,12 +44,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($this->passwordHasher->hashPassword(
-                             $user,
-                $request->get('user')['password']['first']
-                        ));
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+
+            $this->handler->handleCreate($user, $request);
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
@@ -66,7 +56,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="user_edit", requirements={"id"="\d+"})
      */
     public function editAction(Request $request, User $user): RedirectResponse|Response
     {
@@ -75,12 +65,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($this->passwordHasher->hashPassword(
-                $user,
-                $request->get('user')->getPassword()
-            ));
 
-            $this->entityManager->flush();
+            $this->handler->handleEdit($user, $request);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 

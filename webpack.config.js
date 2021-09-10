@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('shop-homepage', './public/css/shop-homepage.css')
+    .addEntry('icon', './node_modules/bootstrap-icons/font/bootstrap-icons.css')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
