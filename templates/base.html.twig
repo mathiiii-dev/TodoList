@@ -31,7 +31,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
+                    {% if app.user and app.user.roles|join('') != 'ROLE_USER'%}
+                            <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
+                    {% endif %}
 
                     {% if app.user %}
                         <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
