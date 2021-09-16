@@ -35,12 +35,12 @@ class Task
     /**
      * @ORM\Column(type="datetime")
      */
-    private DateTimeInterface $created_at;
+    private DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $is_done;
+    private bool $isDone;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
@@ -78,7 +78,7 @@ class Task
 
     public function getCreatedAt(): DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
@@ -86,19 +86,19 @@ class Task
      */
     public function setCreatedAt(): self
     {
-        $this->created_at = new \DateTime();
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
 
     public function getIsDone(): bool
     {
-        return $this->is_done;
+        return $this->isDone;
     }
 
-    public function setIsDone(bool $is_done): self
+    public function setIsDone(bool $isDone): self
     {
-        $this->is_done = $is_done;
+        $this->isDone = $isDone;
 
         return $this;
     }

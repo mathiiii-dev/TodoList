@@ -4,7 +4,6 @@ namespace App\Handler;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserHandler
@@ -18,21 +17,21 @@ class UserHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handleCreate(User $user, Request $request)
+    public function handleCreate(User $user)
     {
         $user->setPassword($this->passwordHasher->hashPassword(
             $user,
-            $request->get('user')['password']['first']
+            $user->getPassword()
         ));
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 
-    public function handleEdit(User $user, Request $request)
+    public function handleEdit(User $user)
     {
         $user->setPassword($this->passwordHasher->hashPassword(
             $user,
-            $request->get('user')->getPassword()
+            $user->getPassword()
         ));
 
         $this->entityManager->flush();
