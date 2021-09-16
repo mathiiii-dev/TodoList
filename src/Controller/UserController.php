@@ -4,34 +4,39 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Handler\UserHandler;
+use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
-    private UserPasswordEncoderInterface $passwordEncoder;
+    private UserRepository $userRepository;
+    private UserHandler $handler;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserRepository $userRepository, UserHandler $handler)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
+        $this->handler = $handler;
     }
 
     /**
      * @Route("/users", name="user_list")
      */
-    public function listAction()
+    public function listAction(): Response
     {
         return $this->render('user/list.html.twig', [
-            'users' => $this->getDoctrine()->getRepository('App:User')->findAll()
+            'users' => $this->userRepository->findAll()
         ]);
     }
 
     /**
      * @Route("/users/create", name="user_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): RedirectResponse|Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -39,43 +44,40 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
 
-            $em->persist($user);
-            $em->flush();
+            $this->handler->handleCreate($user);
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/create.html.twig', ['form' => $form->createView()]);
+        return $this->render('user/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="user_edit", requirements={"id"="\d+"})
      */
-    public function editAction(Request $request, int $id)
+    public function editAction(Request $request, User $user): RedirectResponse|Response
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->handler->handleEdit($user);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
     }
 }

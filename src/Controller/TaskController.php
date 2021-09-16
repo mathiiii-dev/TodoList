@@ -3,25 +3,44 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
+use App\Handler\TaskHandler;
+use App\Repository\TaskRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController
 {
+    private TaskRepository $taskRepository;
+    private EntityManagerInterface $entityManager;
+    private TaskHandler $handler;
+
+    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager, TaskHandler $handler)
+    {
+        $this->taskRepository = $taskRepository;
+        $this->entityManager = $entityManager;
+        $this->handler = $handler;
+    }
+
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction()
+    public function listAction(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findAll()]);
+        return $this->render('task/list.html.twig', [
+            'tasks' => $this->taskRepository->findAll()
+        ]);
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): RedirectResponse|Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -29,10 +48,10 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
 
-            $em->persist($task);
-            $em->flush();
+            /** @var $user User */
+            $user = $this->getUser();
+            $this->handler->handleCreate($user, $task);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -43,17 +62,16 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Route("/tasks/{id}/edit", name="task_edit", requirements={"id"="\d+"})
      */
-    public function editAction(int $id, Request $request)
+    public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
-        $task = $this->getDoctrine()->getRepository(Task::class)->find($id);
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -67,14 +85,11 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @Route("/tasks/{id}/toggle", name="task_toggle", requirements={"id"="\d+"})
      */
-    public function toggleTaskAction(int $id)
+    public function toggleTaskAction(Task $task): RedirectResponse
     {
-        $task = $this->getDoctrine()->getRepository(Task::class)->find($id);
-
-        $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $this->handler->handleIsDone($task);
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -82,15 +97,16 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Route("/tasks/{id}/delete", name="task_delete", requirements={"id"="\d+"})
      */
-    public function deleteTaskAction(int $id)
+    public function deleteTaskAction(Task $task): RedirectResponse
     {
-        $task = $this->getDoctrine()->getRepository(Task::class)->find($id);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        if ($task->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $this->handler->handleDelete($task);
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
