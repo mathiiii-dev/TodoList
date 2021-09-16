@@ -1,0 +1,38 @@
+security:
+  # https://symfony.com/doc/current/security/experimental_authenticators.html
+  enable_authenticator_manager: true
+  # https://symfony.com/doc/current/security.html#c-hashing-passwords
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    App\Entity\User:
+      algorithm: auto
+
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: username
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+      provider: app_user_provider
+      pattern: ^/
+      form_login:
+        login_path: login
+        check_path: login_check
+        always_use_default_target_path: true
+        default_target_path: /
+      logout:
+        path: logout
+
+  access_control:
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/users, roles: ROLE_ADMIN }
+    - { path: ^/users/create, roles: ROLE_ADMIN }
+    - { path: user_edit, roles: ROLE_ADMIN }
+    - { path: ^/, roles: ROLE_USER }
