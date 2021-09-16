@@ -101,6 +101,11 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
+
+        if ($task->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
         $this->handler->handleDelete($task);
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
