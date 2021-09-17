@@ -17,9 +17,7 @@ class UserTypeTest extends TypeTestCase
                 'first' => 'password',
                 'second' => 'password',
             ],
-            'roles' => [
-                'ROLE_USER'
-            ]
+            'roles' => 'ROLE_USER'
         ];
 
         $model = new User();
@@ -32,6 +30,7 @@ class UserTypeTest extends TypeTestCase
 
         $this->assertTrue($form->isSynchronized());
         $this->assertTrue($form->isSubmitted());
+        $this->assertTrue($form->isValid());
         $this->assertEquals($excepted, $model);
     }
 }
