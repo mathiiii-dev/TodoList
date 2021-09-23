@@ -1,27 +1,30 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Functional\Controller;
 
-use App\Controller\HomeController;
 use App\Repository\UserRepository;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HomeControllerTest extends WebTestCase
 {
+    private KernelBrowser $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+    }
+
     public function testVisitingWhileLoggedIn()
     {
-        $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
 
-        /**
-         * @var $userRepository UserRepository
-         */
+        /**@var $userRepository UserRepository */
         $testUser = $userRepository->findOneBy(['id' => 1]);
 
-        $client->loginUser($testUser);
+        $this->client->loginUser($testUser);
 
-        $client->request('GET', '/');
+        $this->client->request('GET', '/');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Bienvenue');
     }

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
-use App\DataFixtures\AppFixtures;
 use App\DataFixtures\UserFixtures;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -12,10 +11,14 @@ class UserRepositoryTest extends KernelTestCase
 {
     use FixturesTrait;
 
-    public function testCout()
+    protected function setUp(): void
     {
         self::bootKernel();
         $this->loadFixtures([UserFixtures::class]);
+    }
+
+    public function testCoutNumberOfgUser()
+    {
         $users = self::getContainer()->get(UserRepository::class);
         /**
          * @var UserRepository $users

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Unit\Repository;
 
 use App\DataFixtures\TaskFixtures;
 use App\Repository\TaskRepository;
@@ -12,14 +12,17 @@ class TaskRepositoryTest extends KernelTestCase
 {
     use FixturesTrait;
 
-    public function testCout()
+    protected function setUp(): void
     {
         self::bootKernel();
         $this->loadFixtures([TaskFixtures::class]);
+    }
+
+    public function testCountTask()
+    {
         $users = self::getContainer()->get(TaskRepository::class);
-        /**
-         * @var UserRepository $users
-         */
+
+        /** @var UserRepository $users */
         $this->assertEquals(10, $users->count([]));
     }
 }

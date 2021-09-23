@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Unit\Form;
 
 use App\Entity\Task;
-use App\Entity\User;
 use App\Form\TaskType;
 use Symfony\Component\Form\Test\TypeTestCase;
 

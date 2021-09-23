@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Unit\Form;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -24,7 +24,9 @@ class UserTypeTest extends TypeTestCase
 
         $form = $this->factory->create(UserType::class, $model);
 
-        $excepted = (new User())->setUsername('Mathias')->setEmail('mail@mail.com')->setPassword('password');
+        $excepted = (new User())->setUsername('Mathias')
+            ->setEmail('mail@mail.com')
+            ->setPassword('password');
 
         $form->submit($formData);
 

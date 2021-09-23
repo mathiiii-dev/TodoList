@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit\Entity;
 
 use App\Entity\Task;
 use App\Entity\User;
@@ -13,9 +13,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class TaskTest extends TestCase
 {
     private User $user;
-
     private Task $task;
-
     private ValidatorInterface|RecursiveValidator $validation;
 
     protected function setUp(): void

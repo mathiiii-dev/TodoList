@@ -110,7 +110,6 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
-
         if ($task->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
