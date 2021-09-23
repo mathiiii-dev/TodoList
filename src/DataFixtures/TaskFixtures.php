@@ -20,16 +20,15 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $users = $this->userRepository->findAll();
-
-        for ($i = 0; $i < 10; ++$i) {
-            $user = array_rand($users);
-            $task = (new Task())->setUser($users[$user])
-                ->setTitle('Le titre ' . $i)
-                ->setIsDone(false)
-                ->setContent('Le contenu de la tache ' . $i);
-            $manager->persist($task);
+        foreach ($users as $user) {
+            for ($i = 0; $i < 2; ++$i) {
+                $task = (new Task())->setUser($user)
+                    ->setTitle('Le tache ' . $i . ' de ' . $user->getUserIdentifier())
+                    ->setIsDone(false)
+                    ->setContent('Le contenu de la tache ' . $i . ' de ' . $user->getUserIdentifier());
+                $manager->persist($task);
+            }
         }
-
         $manager->flush();
     }
 

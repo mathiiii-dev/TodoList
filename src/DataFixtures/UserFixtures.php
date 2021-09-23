@@ -22,6 +22,7 @@ class UserFixtures extends Fixture
             [
                 'username' => 'Mathias',
                 'email' => 'mathias@mail.com',
+                'roles' => 'ROLE_ADMIN'
             ],
             [
                 'username' => 'John',
@@ -46,6 +47,10 @@ class UserFixtures extends Fixture
             $user->setPassword($this->passwordEncoder->hashPassword($user, 'password'))
                 ->setEmail($userInfo['email'])
                 ->setUsername($userInfo['username']);
+
+            if (isset($userInfo['roles'])){
+                $user->setRoles([$userInfo['roles']]);
+            }
             $manager->persist($user);
         }
 

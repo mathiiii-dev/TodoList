@@ -39,13 +39,12 @@ class TaskControllerTest extends WebTestCase
        $this->assertSelectorExists('.btn.btn-info');
     }
 
-    public function testredirectIfNotLoggedIn()
+    public function testRedirectIfNotLoggedIn()
     {
         $this->client->request('GET', '/tasks');
         $this->assertResponseRedirects(
             "http://localhost/login",
-            Response::HTTP_FOUND,
-            "No redirection to login page for uri : /tasks"
+            Response::HTTP_FOUND
         );
     }
 
@@ -159,7 +158,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertNotEquals($isDone, $testTask->getIsDone());
     }
 
-    public function testSuccessfulEditTaskAsAuthor()
+    public function testEditTask()
     {
         $userRepository = static::getContainer()->get(UserRepository::class);
 
@@ -187,10 +186,10 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
 
-        /** @var Task */
+        /** @var $newTask Task */
         $newTask = $taskRepository->find($testTask->getId());
-        $this->assertSame("Une tache modifié", $newTask->getTitle(), "The title has not been updated correctly.");
-        $this->assertSame("Un contenu modifié", $newTask->getContent(), "The content has not been updated correctly.");
+        $this->assertSame("Une tache modifié", $newTask->getTitle());
+        $this->assertSame("Un contenu modifié", $newTask->getContent());
     }
 
 }
