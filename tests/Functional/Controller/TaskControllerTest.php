@@ -2,8 +2,6 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,16 +17,16 @@ class TaskControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testTasksPage()
     {
-       $this->client->loginUser($this->fixtures['user-1']);
+        $this->client->loginUser($this->fixtures['user-1']);
 
-       $this->client->request('GET', '/tasks');
-       $this->assertResponseIsSuccessful();
-       $this->assertSelectorExists('.btn.btn-info');
+        $this->client->request('GET', '/tasks');
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('.btn.btn-info');
     }
 
     public function testRedirectIfNotLoggedIn()
@@ -59,7 +57,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
-    public function testCreateInvalidTask()
+    public function testCreateInvalidTaskWithNoTitle()
     {
         $this->client->loginUser($this->fixtures['user-1']);
 
@@ -68,27 +66,37 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => '',
-            'task[content]' => ''
+            'task[content]' => 'Un contenu'
         ]);
         $this->client->submit($form);
 
         $this->assertSelectorTextContains('li', 'Vous devez saisir un titre');
     }
 
-    public function testDeleteTask()
+    public function testCreateInvalidTaskWithNoContent()
     {
         $this->client->loginUser($this->fixtures['user-1']);
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
+        $crawler = $this->client->request('GET', '/tasks/create');
+        $this->assertResponseIsSuccessful();
 
-        /**@var $userRepository UserRepository */
-        $testTask = $taskRepository->findOneBy(['user' => $this->fixtures['user-1']]);
+        $form = $crawler->selectButton('Ajouter')->form([
+            'task[title]' => 'Un titre',
+            'task[content]' => ''
+        ]);
+        $this->client->submit($form);
 
-        $this->client->request('GET', '/tasks/' . $testTask->getId() . '/delete');
+        $this->assertSelectorTextContains('li', 'Vous devez saisir du contenu');
+    }
+
+    public function testSuccessfulDeleteTaskAsAuthor()
+    {
+        $this->client->loginUser($this->fixtures['user-admin']);
+
+        $this->client->request('GET', '/tasks/' . $this->fixtures['task-admin']->getId() . '/delete');
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
-
     }
 
     public function testDeleteTaskWithNonCreatorUser()
@@ -138,5 +146,4 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
-
 }

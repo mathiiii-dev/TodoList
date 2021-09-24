@@ -64,7 +64,8 @@ class TaskTest extends TestCase
         $this->assertHasErrors($this->task->setContent(''), 1);
     }
 
-    public function testBlankTitle() {
+    public function testBlankTitle()
+    {
         $this->assertHasErrors($this->task->setTitle(''), 1);
     }
 

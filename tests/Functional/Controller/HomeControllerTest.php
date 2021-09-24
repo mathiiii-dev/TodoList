@@ -2,9 +2,6 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\DataFixtures\TaskFixtures;
-use App\DataFixtures\UserFixtures;
-use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -18,7 +15,7 @@ class HomeControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testVisitingWhileLoggedIn()

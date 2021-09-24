@@ -59,11 +59,13 @@ class UserTest extends KernelTestCase
         $this->assertHasErrors($this->user->setEmail('m'), 1);
     }
 
-    public function testBlankUsername() {
+    public function testBlankUsername()
+    {
         $this->assertHasErrors($this->user->setUsername(''), 1);
     }
 
-    public function testBlankPassword() {
+    public function testBlankPassword()
+    {
         $this->assertHasErrors($this->user->setPassword(''), 1);
     }
 

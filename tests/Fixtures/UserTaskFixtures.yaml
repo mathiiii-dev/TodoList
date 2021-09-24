@@ -11,6 +11,11 @@ App\Entity\User:
     roles: []
 
 App\Entity\Task:
+  task-admin:
+    title: "La tache admin"
+    content: "Le contenu de la tâche admin"
+    user: "@user-admin"
+    isDone: false
   task-{1..10}:
     title: "La tache <current()>"
     content: "Le contenu de la tâche <current()>"
