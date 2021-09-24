@@ -17,20 +17,17 @@ class UserControllerTest extends WebTestCase
     use FixturesTrait;
 
     private KernelBrowser $client;
+    private array $fixtures;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->loadFixtures([UserFixtures::class]);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserFixtures.yaml']);
     }
 
     public function testAdminAccessUsersManagement()
     {
-        /**@var UserRepository $users */
-        $users = self::getContainer()->get(UserRepository::class);
-        $user = $users->findOneBy(['username' => 'Mathias']);
-
-        $this->client->loginUser($user);
+        $this->client->loginUser($this->fixtures['user-admin']);
 
         $this->client->request('GET', '/users');
 
@@ -40,11 +37,7 @@ class UserControllerTest extends WebTestCase
 
     public function testNonAdminAccessUsersManagement()
     {
-        /**@var UserRepository $users */
-        $users = self::getContainer()->get(UserRepository::class);
-        $user = $users->findOneBy(['username' => 'John']);
-
-        $this->client->loginUser($user);
+        $this->client->loginUser($this->fixtures['user-1']);
 
         $this->client->request('GET', '/users');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -52,12 +45,7 @@ class UserControllerTest extends WebTestCase
 
     public function testAdminCreateUser()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['username' => 'Mathias']);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-admin']);
 
         $crawler = $this->client->request('GET', '/users/create');
         $this->assertResponseIsSuccessful();
@@ -78,12 +66,7 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateinvalidUser()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['username' => 'Mathias']);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-admin']);
 
         $crawler = $this->client->request('GET', '/users/create');
         $this->assertResponseIsSuccessful();
@@ -102,13 +85,8 @@ class UserControllerTest extends WebTestCase
 
     public function testEditUser()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['username' => 'Mathias']);
-        $user = $userRepository->findOneBy(['username' => 'John']);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-admin']);
+        $user = $this->fixtures['user-1'];
 
         $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
         $this->assertResponseIsSuccessful();
@@ -125,10 +103,5 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
-
-        /** @var $newUser User */
-        $newUser = $userRepository->find($user->getId());
-        $this->assertSame("Jule", $newUser->getUserIdentifier());
-        $this->assertSame("jule@user.com", $newUser->getEmail());
     }
 }

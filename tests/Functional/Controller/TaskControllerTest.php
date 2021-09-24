@@ -2,12 +2,8 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\DataFixtures\TaskFixtures;
-use App\DataFixtures\UserFixtures;
-use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
-use App\Tests\Unit\Repository\TaskRepositoryTest;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -18,21 +14,17 @@ class TaskControllerTest extends WebTestCase
     use FixturesTrait;
 
     private KernelBrowser $client;
+    private array $fixtures;
 
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->loadFixtures([UserFixtures::class,TaskFixtures::class]);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserFixtures.yaml']);
     }
 
     public function testTasksPage()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-       $this->client->loginUser($testUser);
+       $this->client->loginUser($this->fixtures['user-1']);
 
        $this->client->request('GET', '/tasks');
        $this->assertResponseIsSuccessful();
@@ -50,12 +42,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateValidTask()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
 
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-1']);
 
         $crawler = $this->client->request('GET', '/tasks/create');
         $this->assertResponseIsSuccessful();
@@ -73,12 +61,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateInvalidTask()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-1']);
 
         $crawler = $this->client->request('GET', '/tasks/create');
         $this->assertResponseIsSuccessful();
@@ -94,17 +77,12 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTask()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-        $this->client->loginUser($testUser);
+        $this->client->loginUser($this->fixtures['user-1']);
 
         $taskRepository = static::getContainer()->get(TaskRepository::class);
 
         /**@var $userRepository UserRepository */
-        $testTask = $taskRepository->findOneBy(['user' => $testUser]);
+        $testTask = $taskRepository->findOneBy(['user' => $this->fixtures['user-1']]);
 
         $this->client->request('GET', '/tasks/' . $testTask->getId() . '/delete');
         $this->assertResponseRedirects();
@@ -115,19 +93,11 @@ class TaskControllerTest extends WebTestCase
 
     public function testDeleteTaskWithNonCreatorUser()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-        $creator = $userRepository->findOneBy(['id' => 2]);
-
+        $testUser = $this->fixtures['user-1'];
 
         $this->client->loginUser($testUser);
 
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-
-        /**@var $userRepository UserRepository */
-        $testTask = $taskRepository->findOneBy(['user' => $creator]);
+        $testTask = $this->fixtures['task-2'];
 
         $this->client->request('GET', '/tasks/' . $testTask->getId() . '/delete');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -136,18 +106,9 @@ class TaskControllerTest extends WebTestCase
 
     public function testToggleTask()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
+        $this->client->loginUser($this->fixtures['user-1']);
 
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-        $this->client->loginUser($testUser);
-
-        /**@var $userRepository UserRepository */
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-
-        /**@var $testTask Task*/
-        $testTask = $taskRepository->findOneBy(['id' => 1]);
+        $testTask = $this->fixtures['task-1'];
         $isDone = $testTask->getIsDone();
 
         $this->client->request('GET', '/tasks/' . $testTask->getId() . '/toggle');
@@ -160,18 +121,9 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditTask()
     {
-        $userRepository = static::getContainer()->get(UserRepository::class);
+        $this->client->loginUser($this->fixtures['user-1']);
 
-        /**@var $userRepository UserRepository */
-        $testUser = $userRepository->findOneBy(['id' => 1]);
-
-        $this->client->loginUser($testUser);
-
-        /**@var $userRepository UserRepository */
-        $taskRepository = static::getContainer()->get(TaskRepository::class);
-
-        /**@var $testTask Task*/
-        $testTask = $taskRepository->findOneBy(['id' => 1]);
+        $testTask = $this->fixtures['task-1'];
 
         $crawler = $this->client->request('GET', '/tasks/' . $testTask->getId() . '/edit');
         $this->assertResponseIsSuccessful();
@@ -185,11 +137,6 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
-
-        /** @var $newTask Task */
-        $newTask = $taskRepository->find($testTask->getId());
-        $this->assertSame("Une tache modifié", $newTask->getTitle());
-        $this->assertSame("Un contenu modifié", $newTask->getContent());
     }
 
 }

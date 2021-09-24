@@ -56,7 +56,8 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "5.3.*",
-        "symfony/web-profiler-bundle": "5.3.*"
+        "symfony/web-profiler-bundle": "5.3.*",
+        "theofidry/alice-data-fixtures": "^1.4"
     },
     "config": {
         "optimize-autoloader": true,
