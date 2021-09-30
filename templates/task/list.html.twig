@@ -34,5 +34,9 @@
                 Il n'y a pas encore de tâche enregistrée.
             </div>
         {% endfor %}
+        <div class="d-flex justify-content-center mt-3">
+            {% do tasks.setPageRange(2) %}
+            {{ knp_pagination_render(tasks, 'component/pagination.html.twig') }}
+        </div>
     </div>
 {% endblock %}
