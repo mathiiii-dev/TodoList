@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ path('home') }}">
             <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" width="30" height="30"
                  class="d-inline-block align-text-top"/>
             To Do List app</a>
@@ -13,6 +13,9 @@
                 {% if app.user and app.user.roles|join('') != 'ROLE_USER' %}
                     <li class="nav-item">
                         <a href="{{ path('user_create') }}" class="nav-link active">Créer un utilisateur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('user_list') }}" class="nav-link active">Liste des utilisateurs</a>
                     </li>
                 {% endif %}
                 {% if app.user %}
