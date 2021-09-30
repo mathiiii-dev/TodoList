@@ -80,7 +80,7 @@ Using Symfony CLI :
 symfony serve
 ```
 
-## Tests
+## Unit & Functional tests
 
 The tests are available here : 
 ```
