@@ -20,7 +20,7 @@ class TaskControllerTest extends WebTestCase
         $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
-    public function testTasksPage()
+    public function testAccessTasksPage()
     {
         $this->client->loginUser($this->fixtures['user-1']);
 
@@ -29,7 +29,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('.btn.btn-info');
     }
 
-    public function testRedirectIfNotLoggedIn()
+    public function testNotLoggedInAccessTasksPage()
     {
         $this->client->request('GET', '/tasks');
         $this->assertResponseRedirects(
@@ -89,6 +89,15 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorTextContains('li', 'Vous devez saisir du contenu');
     }
 
+    public function testNotLoggedInAccessCreateTask()
+    {
+        $this->client->request('GET', '/tasks/create');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
+    }
+
     public function testSuccessfulDeleteTaskAsAuthor()
     {
         $this->client->loginUser($this->fixtures['user-admin']);
@@ -109,7 +118,15 @@ class TaskControllerTest extends WebTestCase
 
         $this->client->request('GET', '/tasks/' . $testTask->getId() . '/delete');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
 
+    public function testNotLoggedInAccessDeleteTask()
+    {
+        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/delete');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
     }
 
     public function testToggleTask()
@@ -125,6 +142,15 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
 
         $this->assertNotEquals($isDone, $testTask->getIsDone());
+    }
+
+    public function testNotLoggedInAccessToggleTask()
+    {
+        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/toggle');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
     }
 
     public function testEditTask()
@@ -145,5 +171,14 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testNotLoggedInAccessEditTask()
+    {
+        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/edit');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
     }
 }

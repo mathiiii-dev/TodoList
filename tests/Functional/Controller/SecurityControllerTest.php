@@ -29,7 +29,7 @@ class SecurityControllerTest extends WebTestCase
     }
 
 
-    public function testSuccesLogin()
+    public function testSuccessLogin()
     {
         $crawler = $this->client->request('GET', '/login');
 
@@ -55,14 +55,12 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
-    public function testAlreadyLoggedInUser()
+    public function testLoggedInUserAccessloginForm()
     {
-
         $testUser = $this->fixtures['user-1'];
-
         $this->client->loginUser($testUser);
 
         $this->client->request('GET', '/login');
-        $this->assertResponseRedirects();
+        $this->assertResponseRedirects("/");
     }
 }

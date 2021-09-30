@@ -68,11 +68,4 @@ class UserTest extends KernelTestCase
     {
         $this->assertHasErrors($this->user->setPassword(''), 1);
     }
-
-    public function testAddTasksToUser()
-    {
-        $user = $this->user->addTask($this->task);
-        $this->assertSame($this->task->getUser(), $this->user);
-        $this->assertCount(1, $user->getTasks());
-    }
 }

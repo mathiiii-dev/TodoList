@@ -43,6 +43,15 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
+    public function testNotLoggedInAccessUsersManagement()
+    {
+        $this->client->request('GET', '/users');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
+    }
+
     public function testAdminCreateUser()
     {
         $this->client->loginUser($this->fixtures['user-admin']);
@@ -83,6 +92,24 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('li', 'Les deux mots de passe doivent correspondre.');
     }
 
+    public function testNonAdminAccessCreateUser()
+    {
+        $this->client->loginUser($this->fixtures['user-2']);
+        $user = $this->fixtures['user-1'];
+
+        $this->client->request('GET', '/users/create');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testNotLoggedInAccessCreateUser()
+    {
+        $this->client->request('GET', '/users/create');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
+    }
+
     public function testEditUser()
     {
         $this->client->loginUser($this->fixtures['user-admin']);
@@ -103,5 +130,25 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testNonAdminAccessEditUser()
+    {
+        $this->client->loginUser($this->fixtures['user-2']);
+        $user = $this->fixtures['user-1'];
+
+        $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testNotLoggedInAccessEditUser()
+    {
+        $user = $this->fixtures['user-1'];
+
+        $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $this->assertResponseRedirects(
+            "http://localhost/login",
+            Response::HTTP_FOUND
+        );
     }
 }
