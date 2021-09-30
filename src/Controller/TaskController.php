@@ -8,6 +8,7 @@ use App\Form\TaskType;
 use App\Handler\TaskHandler;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,21 +20,29 @@ class TaskController extends AbstractController
     private TaskRepository $taskRepository;
     private EntityManagerInterface $entityManager;
     private TaskHandler $handler;
+    private PaginatorInterface $paginator;
 
-    public function __construct(TaskRepository $taskRepository, EntityManagerInterface $entityManager, TaskHandler $handler)
-    {
+    public function __construct(
+        TaskRepository $taskRepository,
+        EntityManagerInterface $entityManager,
+        TaskHandler $handler,
+        PaginatorInterface $paginator
+    ) {
         $this->taskRepository = $taskRepository;
         $this->entityManager = $entityManager;
         $this->handler = $handler;
+        $this->paginator = $paginator;
     }
 
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(): Response
+    public function listAction(Request $request): Response
     {
+        $tasks = $this->taskRepository->findAll();
+        $data = $this->paginator->paginate($tasks, $request->query->getInt('page', 1), 6);
         return $this->render('task/list.html.twig', [
-            'tasks' => $this->taskRepository->findAll()
+            'tasks' => $data
         ]);
     }
 
@@ -101,7 +110,6 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
-
         if ($task->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
