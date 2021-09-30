@@ -56,10 +56,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $tasks;
 
-    #[Pure] public function __construct()
-    {
-        $this->tasks = new ArrayCollection();
-    }
+    #[Pure]
+ public function __construct()
+ {
+     $this->tasks = new ArrayCollection();
+ }
 
     public function getId(): ?int
     {
@@ -157,12 +158,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
-
 }

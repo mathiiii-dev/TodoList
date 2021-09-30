@@ -22,7 +22,7 @@ class UserFixtures extends Fixture
             [
                 'username' => 'Mathias',
                 'email' => 'mathias@mail.com',
-                'roles' => 'ROLE_ADMIN'
+                'roles' => 'ROLE_ADMIN',
             ],
             [
                 'username' => 'John',
@@ -48,7 +48,7 @@ class UserFixtures extends Fixture
                 ->setEmail($userInfo['email'])
                 ->setUsername($userInfo['username']);
 
-            if (isset($userInfo['roles'])){
+            if (isset($userInfo['roles'])) {
                 $user->setRoles([$userInfo['roles']]);
             }
             $manager->persist($user);

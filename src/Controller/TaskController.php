@@ -9,11 +9,11 @@ use App\Handler\TaskHandler;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController
 {
@@ -41,8 +41,9 @@ class TaskController extends AbstractController
     {
         $tasks = $this->taskRepository->findAll();
         $data = $this->paginator->paginate($tasks, $request->query->getInt('page', 1), 6);
+
         return $this->render('task/list.html.twig', [
-            'tasks' => $data
+            'tasks' => $data,
         ]);
     }
 
@@ -57,8 +58,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var $user User */
+            /** @var User */
             $user = $this->getUser();
             $this->handler->handleCreate($user, $task);
 
