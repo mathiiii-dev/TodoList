@@ -2,11 +2,6 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\DataFixtures\UserFixtures;
-use App\Entity\Task;
-use App\Entity\User;
-use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -22,7 +17,7 @@ class UserControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__.'/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testAdminAccessUsersManagement()
@@ -47,7 +42,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/users');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
@@ -89,7 +84,7 @@ class UserControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('li', 'Les deux mots de passe doivent correspondre.');
+        $this->assertSelectorTextContains('.invalid-feedback', 'Les deux mots de passe doivent correspondre.');
     }
 
     public function testNonAdminAccessCreateUser()
@@ -105,7 +100,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/users/create');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
@@ -115,7 +110,7 @@ class UserControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['user-admin']);
         $user = $this->fixtures['user-1'];
 
-        $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $crawler = $this->client->request('GET', '/users/'.$user->getId().'/edit');
         $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Modifier')->form([
@@ -137,7 +132,7 @@ class UserControllerTest extends WebTestCase
         $this->client->loginUser($this->fixtures['user-2']);
         $user = $this->fixtures['user-1'];
 
-        $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $this->client->request('GET', '/users/'.$user->getId().'/edit');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
@@ -145,9 +140,9 @@ class UserControllerTest extends WebTestCase
     {
         $user = $this->fixtures['user-1'];
 
-        $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $this->client->request('GET', '/users/'.$user->getId().'/edit');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }

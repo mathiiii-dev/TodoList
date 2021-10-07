@@ -17,7 +17,7 @@ class TaskControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__.'/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testAccessTasksPage()
@@ -26,21 +26,20 @@ class TaskControllerTest extends WebTestCase
 
         $this->client->request('GET', '/tasks');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('.btn.btn-info');
+        $this->assertSelectorExists('.btn.btn-primary');
     }
 
     public function testNotLoggedInAccessTasksPage()
     {
         $this->client->request('GET', '/tasks');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
 
     public function testCreateValidTask()
     {
-
         $this->client->loginUser($this->fixtures['user-1']);
 
         $crawler = $this->client->request('GET', '/tasks/create');
@@ -48,7 +47,7 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => 'Une tâche',
-            'task[content]' => 'Un contenu'
+            'task[content]' => 'Un contenu',
         ]);
         $this->client->submit($form);
 
@@ -66,11 +65,11 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => '',
-            'task[content]' => 'Un contenu'
+            'task[content]' => 'Un contenu',
         ]);
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('li', 'Vous devez saisir un titre');
+        $this->assertSelectorTextContains('.invalid-feedback', 'Vous devez saisir un titre');
     }
 
     public function testCreateInvalidTaskWithNoContent()
@@ -82,18 +81,18 @@ class TaskControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => 'Un titre',
-            'task[content]' => ''
+            'task[content]' => '',
         ]);
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('li', 'Vous devez saisir du contenu');
+        $this->assertSelectorTextContains('.invalid-feedback', 'Vous devez saisir du contenu');
     }
 
     public function testNotLoggedInAccessCreateTask()
     {
         $this->client->request('GET', '/tasks/create');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
@@ -102,7 +101,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->fixtures['user-admin']);
 
-        $this->client->request('GET', '/tasks/' . $this->fixtures['task-admin']->getId() . '/delete');
+        $this->client->request('GET', '/tasks/'.$this->fixtures['task-admin']->getId().'/delete');
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
@@ -116,15 +115,15 @@ class TaskControllerTest extends WebTestCase
 
         $testTask = $this->fixtures['task-2'];
 
-        $this->client->request('GET', '/tasks/' . $testTask->getId() . '/delete');
+        $this->client->request('GET', '/tasks/'.$testTask->getId().'/delete');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     public function testNotLoggedInAccessDeleteTask()
     {
-        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/delete');
+        $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/delete');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
@@ -136,7 +135,7 @@ class TaskControllerTest extends WebTestCase
         $testTask = $this->fixtures['task-1'];
         $isDone = $testTask->getIsDone();
 
-        $this->client->request('GET', '/tasks/' . $testTask->getId() . '/toggle');
+        $this->client->request('GET', '/tasks/'.$testTask->getId().'/toggle');
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
@@ -146,9 +145,9 @@ class TaskControllerTest extends WebTestCase
 
     public function testNotLoggedInAccessToggleTask()
     {
-        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/toggle');
+        $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/toggle');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
@@ -159,12 +158,12 @@ class TaskControllerTest extends WebTestCase
 
         $testTask = $this->fixtures['task-1'];
 
-        $crawler = $this->client->request('GET', '/tasks/' . $testTask->getId() . '/edit');
+        $crawler = $this->client->request('GET', '/tasks/'.$testTask->getId().'/edit');
         $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Modifier')->form([
             'task[title]' => 'Une tache modifié',
-            'task[content]' => 'Un contenu modifié'
+            'task[content]' => 'Un contenu modifié',
         ]);
         $this->client->submit($form);
 
@@ -175,9 +174,9 @@ class TaskControllerTest extends WebTestCase
 
     public function testNotLoggedInAccessEditTask()
     {
-        $this->client->request('GET', '/tasks/' . $this->fixtures['task-1']->getId() . '/edit');
+        $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/edit');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $_ENV['HOST_URL'].'/login',
             Response::HTTP_FOUND
         );
     }
