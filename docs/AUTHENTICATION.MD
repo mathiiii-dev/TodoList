@@ -27,7 +27,22 @@ It’s very important because it helps Symfony understand that you're managing u
 class User implements UserInterface {...}
 ```
 
-Then, when you create or modify an entity like this don't forget to run a migration that will update the database. 
+## User Storage
+
+In this app users are stored in the database under the table User with the following fields : 
+* id
+* username
+* email
+* password
+* roles
+
+if you want to add a fields from the user entity run this command and follow the instructions :
+
+```php
+php bin/console make:entity User
+```
+
+Then, when you create or modify the entity don't forget to run a migration that will update the database. 
 
 ```php
 php bin/console make:migration
