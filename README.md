@@ -128,6 +128,10 @@ Then you can access the report here : ```127.0.0.1:8000/path/to/directory/index.
 * [Bootstrap](https://getbootstrap.com/) - CSS Framework
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit) - Unit & Functional tests
 
+## Wiki
+
+To help you understand how this project works and how you can contribute to this project please check the [docs](https://github.com/mathiiii-dev/TodoList/tree/master/docs) directory or the [Wiki](https://github.com/mathiiii-dev/TodoList/wiki) of this repository
+
 ## Versioning
 
 For the versions available, see the [tags on this repository](https://github.com/mathiiii-dev/todolist/tags). 
