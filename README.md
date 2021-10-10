@@ -2,7 +2,6 @@
 
 Improve an existing ToDo & Co application
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mathiiii-dev_TodoList&metric=alert_status)](https://sonarcloud.io/dashboard?id=mathiiii-dev_TodoList)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d58972e6063a46219088f4352578f4af)](https://www.codacy.com/gh/mathiiii-dev/TodoList/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathiiii-dev/TodoList&amp;utm_campaign=Badge_Grade)
 
 ## Getting Started
@@ -128,6 +127,10 @@ Then you can access the report here : ```127.0.0.1:8000/path/to/directory/index.
 * [KnpPaginatorBundle](https://github.com/KnpLabs/KnpPaginatorBundle) - Pagination 
 * [Bootstrap](https://getbootstrap.com/) - CSS Framework
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit) - Unit & Functional tests
+
+## Wiki
+
+To help you understand how this project works and how you can contribute to this project please check the [docs](https://github.com/mathiiii-dev/TodoList/tree/master/docs) directory or the [Wiki](https://github.com/mathiiii-dev/TodoList/wiki) of this repository
 
 ## Versioning
 
