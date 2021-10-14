@@ -60,15 +60,6 @@ Run : ```php ./vendor/bin/php-cs-fixer fix src```
 
 This will reformat your code to respect the PSR.
 
-### PHPStan
-
-PHPStan focuses on finding errors in your code without actually running it. It catches whole classes of bugs even before you write tests for the code.
-
-Run : ```php ./vendor/bin/phpstan analyse src tests```
-
-It will return you all the errors and bugs in your code.
-Before committing your code please run this command and correct the bugs or errors if you got one
-
 ### Codacy
 
 When you commit something or you create a PR, [Codacy](https://app.codacy.com/gh/mathiiii-dev/TodoList/dashboard) will analyse the code and return you a mark depending on your code quality.
