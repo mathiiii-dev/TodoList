@@ -34,6 +34,18 @@ Some examples:
   * If its a fix: ```fix: <the fix description>```
   * If its a test: ```test: <the test description>```
 
+### Test : 
+
+You must test what you are developing by creating unit or functional test.
+Please keep the code coverage to 100%.
+
+You can create a code coverage report with this command : 
+```php
+php ./vendor/bin/phunit --coverage-html public/tests
+```
+
+and then access the report here : [https://127.0.0.1:8000/tests/](https://127.0.0.1:8000/tests/)
+
 
 ### Pull Request: 
 
