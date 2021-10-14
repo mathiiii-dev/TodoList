@@ -10,13 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeControllerTest extends WebTestCase
 {
     use FixturesTrait;
+
     private KernelBrowser $client;
     private array $fixtures;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__.'/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testAccessHomePage()
@@ -32,7 +33,7 @@ class HomeControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/');
         $this->assertResponseRedirects(
-            "http://localhost/login",
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }

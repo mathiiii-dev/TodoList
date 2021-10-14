@@ -6,11 +6,11 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Handler\UserHandler;
 use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
@@ -29,7 +29,7 @@ class UserController extends AbstractController
     public function listAction(): Response
     {
         return $this->render('user/list.html.twig', [
-            'users' => $this->userRepository->findAll()
+            'users' => $this->userRepository->findAll(),
         ]);
     }
 
@@ -44,7 +44,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->handler->handleCreate($user);
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
@@ -53,7 +52,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/create.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -67,7 +66,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->handler->handleEdit($user);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
@@ -77,7 +75,7 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView(),
-            'user' => $user
+            'user' => $user,
         ]);
     }
 }

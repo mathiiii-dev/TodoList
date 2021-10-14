@@ -34,5 +34,4 @@ class TaskHandler
         $this->entityManager->remove($task);
         $this->entityManager->flush();
     }
-
 }

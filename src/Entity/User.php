@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $tasks;
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->tasks = new ArrayCollection();
     }
@@ -157,12 +157,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
-
 }

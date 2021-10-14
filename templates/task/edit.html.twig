@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}"
+                           alt="todo list">{% endblock %}
+
 {% block body %}
     {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
     {{ form_widget(form) }}

@@ -40,7 +40,7 @@ class TaskTest extends TestCase
         $messages = [];
         /** @var ConstraintViolation $error */
         foreach ($errors as $error) {
-            $messages[] = $error->getPropertyPath() . ' => ' . $error->getMessage();
+            $messages[] = $error->getPropertyPath().' => '.$error->getMessage();
         }
         $this->assertCount($number, $errors, implode(', ', $messages));
     }
@@ -52,8 +52,8 @@ class TaskTest extends TestCase
 
     public function testTask()
     {
-        $this->assertEquals("un titre", $this->task->getTitle());
-        $this->assertEquals("un contenu", $this->task->getContent());
+        $this->assertEquals('un titre', $this->task->getTitle());
+        $this->assertEquals('un contenu', $this->task->getContent());
         $this->assertIsBool(false, $this->task->getIsDone());
         $this->assertEquals($this->user, $this->task->getUser());
         $this->assertEqualsWithDelta(new \DateTime(), $this->task->getCreatedAt(), 1);
@@ -68,5 +68,4 @@ class TaskTest extends TestCase
     {
         $this->assertHasErrors($this->task->setTitle(''), 1);
     }
-
 }

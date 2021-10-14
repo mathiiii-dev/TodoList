@@ -6,14 +6,13 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
-
 class TaskTypeTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
         $formData = [
             'title' => 'Un titre',
-            'content' => 'Un contenu'
+            'content' => 'Un contenu',
         ];
 
         $model = new Task();
@@ -31,4 +30,3 @@ class TaskTypeTest extends TypeTestCase
         $this->assertEquals($excepted, $model);
     }
 }
-
