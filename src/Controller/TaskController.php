@@ -35,7 +35,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks", name="task_list", methods={"GET"})
      */
     public function listAction(Request $request): Response
     {
@@ -48,7 +48,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/create", name="task_create")
+     * @Route("/tasks/create", name="task_create", methods={"POST", "GET"})
      */
     public function createAction(Request $request): RedirectResponse|Response
     {
@@ -71,7 +71,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/edit", name="task_edit", requirements={"id"="\d+"})
+     * @Route("/tasks/{id}/edit", name="task_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
@@ -94,7 +94,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle", requirements={"id"="\d+"})
+     * @Route("/tasks/{id}/toggle", name="task_toggle", requirements={"id"="\d+"}, methods={"GET","POST"})
      */
     public function toggleTaskAction(Task $task): RedirectResponse
     {
@@ -106,7 +106,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasks/{id}/delete", name="task_delete", requirements={"id"="\d+"})
+     * @Route("/tasks/{id}/delete", name="task_delete", requirements={"id"="\d+"}, methods={"GET","POST"})
      */
     public function deleteTaskAction(Task $task): RedirectResponse
     {
