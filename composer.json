@@ -50,7 +50,6 @@
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofphp/php-cs-fixer": "^3.1",
         "liip/test-fixtures-bundle": "^1.0.0",
-        "phpstan/phpstan": "^0.12.99",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "5.3.*",
         "symfony/css-selector": "5.3.*",
@@ -59,8 +58,7 @@
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "5.3.*",
         "symfony/web-profiler-bundle": "5.3.*",
-        "theofidry/alice-data-fixtures": "^1.4",
-        "vimeo/psalm": "^4.10"
+        "theofidry/alice-data-fixtures": "^1.4"
     },
     "config": {
         "optimize-autoloader": true,

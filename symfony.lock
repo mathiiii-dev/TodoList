@@ -1,10 +1,4 @@
 {
-    "amphp/amp": {
-        "version": "v2.6.1"
-    },
-    "amphp/byte-stream": {
-        "version": "v1.8.1"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.3"
     },
@@ -13,9 +7,6 @@
     },
     "composer/xdebug-handler": {
         "version": "2.0.2"
-    },
-    "dnoegel/php-xdg-base-dir": {
-        "version": "v0.1.1"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -118,12 +109,6 @@
     "fakerphp/faker": {
         "version": "v1.16.0"
     },
-    "felixfbecker/advanced-json-rpc": {
-        "version": "v3.2.1"
-    },
-    "felixfbecker/language-server-protocol": {
-        "version": "1.5.1"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.0",
         "recipe": {
@@ -170,14 +155,8 @@
             "./config/packages/test/nelmio_alice.yaml"
         ]
     },
-    "netresearch/jsonmapper": {
-        "version": "v4.0.0"
-    },
     "nikic/php-parser": {
         "version": "v4.12.0"
-    },
-    "openlss/lib-array2xml": {
-        "version": "1.0.0"
     },
     "phar-io/manifest": {
         "version": "2.0.3"
@@ -199,9 +178,6 @@
     },
     "phpspec/prophecy": {
         "version": "1.14.0"
-    },
-    "phpstan/phpstan": {
-        "version": "0.12.99"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.6"
@@ -708,13 +684,7 @@
     "twig/twig": {
         "version": "v3.3.2"
     },
-    "vimeo/psalm": {
-        "version": "4.10.0"
-    },
     "webmozart/assert": {
         "version": "1.10.0"
-    },
-    "webmozart/path-util": {
-        "version": "2.3.0"
     }
 }
