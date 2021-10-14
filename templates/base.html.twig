@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,65 +16,32 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">To Do List app</a>
-
-                    <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
-                </div>
-            </div>
-        </nav>
-
-        <!-- Page Content -->
+        {% include('component/navbar.html.twig') %}
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    {% if app.user and app.user.roles|join('') != 'ROLE_USER'%}
-                            <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
-                    {% endif %}
-
-                    {% if app.user %}
-                        <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
-                    {% endif %}
-
-                    {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-                        <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 mb-2">
                     {% for flash_message in app.session.flashBag.get('success') %}
                         <div class="alert alert-success" role="alert">
                             <strong>Superbe !</strong> {{ flash_message }}
                         </div>
                     {% endfor %}
-
                     {% for flash_message in app.session.flashBag.get('error') %}
                         <div class="alert alert-danger" role="alert">
                             <strong>Oops !</strong> {{ flash_message }}
                         </div>
                     {% endfor %}
-
                     {% block header_title %}{% endblock %}
-                    {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
+                    {% block header_img %}<img class="img-fluid w-100" src="{{ asset('img/todolist_homepage.jpg') }}"
+                                               alt="todo list">{% endblock %}
                 </div>
             </div>
-
-            <br />
-
             <div class="row">
                 <div class="col-md-12">
                     {% block body %}{% endblock %}
                 </div>
             </div>
         </div>
-        <!-- /.container -->
-
         <div class="container">
-
             <hr>
             <footer>
                 <div class="row">
@@ -84,7 +50,6 @@
                     </div>
                 </div>
             </footer>
-
         </div>
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}

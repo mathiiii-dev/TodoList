@@ -26,5 +26,9 @@ yarn-error.log
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
-public/tests
 ###< phpunit/phpunit ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###

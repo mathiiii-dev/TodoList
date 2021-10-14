@@ -23,9 +23,9 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
         foreach ($users as $user) {
             for ($i = 0; $i < 2; ++$i) {
                 $task = (new Task())->setUser($user)
-                    ->setTitle('Le tache ' . $i . ' de ' . $user->getUserIdentifier())
+                    ->setTitle('Le tache '.$i.' de '.$user->getUserIdentifier())
                     ->setIsDone(false)
-                    ->setContent('Le contenu de la tache ' . $i . ' de ' . $user->getUserIdentifier());
+                    ->setContent('Le contenu de la tache '.$i.' de '.$user->getUserIdentifier());
                 $manager->persist($task);
             }
         }

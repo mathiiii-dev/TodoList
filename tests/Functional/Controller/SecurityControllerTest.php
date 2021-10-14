@@ -16,7 +16,7 @@ class SecurityControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->fixtures = $this->loadFixtureFiles([__DIR__ . '/../../Fixtures/UserTaskFixtures.yaml']);
+        $this->fixtures = $this->loadFixtureFiles([__DIR__.'/../../Fixtures/UserTaskFixtures.yaml']);
     }
 
     public function testAccessLoginForm()
@@ -28,14 +28,13 @@ class SecurityControllerTest extends WebTestCase
         $this->assertSelectorNotExists('.alert.alert-danger');
     }
 
-
     public function testSuccessLogin()
     {
         $crawler = $this->client->request('GET', '/login');
 
         $form = $crawler->selectButton('Se connecter')->form([
             '_username' => 'Mathias',
-            '_password' => 'password'
+            '_password' => 'password',
         ]);
         $this->client->submit($form);
         $this->assertTrue($this->client->getResponse()->isRedirect());
@@ -46,7 +45,7 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form([
             '_username' => 'username_not_found',
-            '_password' => 'password_not_found'
+            '_password' => 'password_not_found',
         ]);
         $this->client->submit($form);
 
@@ -61,6 +60,6 @@ class SecurityControllerTest extends WebTestCase
         $this->client->loginUser($testUser);
 
         $this->client->request('GET', '/login');
-        $this->assertResponseRedirects("/");
+        $this->assertResponseRedirects('/');
     }
 }
