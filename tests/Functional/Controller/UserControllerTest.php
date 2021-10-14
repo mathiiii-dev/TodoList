@@ -42,7 +42,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/users');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -90,7 +90,6 @@ class UserControllerTest extends WebTestCase
     public function testNonAdminAccessCreateUser()
     {
         $this->client->loginUser($this->fixtures['user-2']);
-        $user = $this->fixtures['user-1'];
 
         $this->client->request('GET', '/users/create');
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -100,7 +99,7 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/users/create');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -142,7 +141,7 @@ class UserControllerTest extends WebTestCase
 
         $this->client->request('GET', '/users/'.$user->getId().'/edit');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }

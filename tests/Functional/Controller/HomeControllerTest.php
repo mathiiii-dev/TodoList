@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeControllerTest extends WebTestCase
 {
     use FixturesTrait;
+
     private KernelBrowser $client;
     private array $fixtures;
 
@@ -32,7 +33,7 @@ class HomeControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }

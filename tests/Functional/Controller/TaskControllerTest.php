@@ -33,7 +33,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/tasks');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -92,7 +92,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/tasks/create');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -123,7 +123,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/delete');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -147,7 +147,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/toggle');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
@@ -176,7 +176,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/tasks/'.$this->fixtures['task-1']->getId().'/edit');
         $this->assertResponseRedirects(
-            $_ENV['HOST_URL'].'/login',
+            $this->getContainer()->getParameter('hostUrl').'/login',
             Response::HTTP_FOUND
         );
     }
