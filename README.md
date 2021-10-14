@@ -109,17 +109,20 @@ The tests are available here :
 ```
 
 If you want to run some unit or functional tests, you can simply run : 
-```
+```php
 php ./vendor/bin/phunit
 ```
 
 If you want to generate a code coverage report, you can run :
-```
-php ./vendor/bin/phunit --coverage-html path/to/directory
+```php
+php ./vendor/bin/phunit --coverage-html public/tests
 ```
 
-Then you can access the report here : ```127.0.0.1:8000/path/to/directory/index.html```
+The code coverage of this project is about 100% : 
 
+
+Then you can access the report here : [https://127.0.0.1:8000/tests/](https://127.0.0.1:8000/tests/)
+![code coverage](https://user-images.githubusercontent.com/35760861/137294525-4b85b5b0-397c-4c59-8203-345b81099237.png)
 
 ## Built With
 
