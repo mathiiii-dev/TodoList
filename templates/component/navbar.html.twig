@@ -20,10 +20,11 @@
                 {% endif %}
                 {% if app.user %}
                     <li class="nav-item">
-                        <a href="{{ path('logout') }}" class="nav-link active">Se déconnecter</a>
+                        <a href="{{ path('logout') }}" class="nav-link active text-danger">Se déconnecter</a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
+
